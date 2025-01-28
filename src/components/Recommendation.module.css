@@ -1,0 +1,176 @@
+.container {
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 2rem;
+}
+
+.mainRecommendation {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.bookTitle {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-style: italic;
+}
+
+.titleText {
+  font-size: 2.5rem;
+  color: #2c3e50;
+  font-weight: 700;
+  display: block;
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
+}
+
+.authorText {
+  display: block;
+  font-size: 1.5rem;
+  color: #64748b;
+  margin-top: 0.5rem;
+}
+
+.whyItFits {
+  margin: 2rem 0;
+}
+
+.whyItFits h3 {
+  font-size: 1.5rem;
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+}
+
+.connectionsList {
+  list-style: none;
+  padding: 0;
+}
+
+.connectionsList li {
+  margin-bottom: 1.5rem;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  padding-left: 2rem;
+  position: relative;
+}
+
+.connectionsList li:before {
+  content: "•";
+  position: absolute;
+  left: 0.5rem;
+  color: #3b82f6;
+  font-size: 1.5rem;
+}
+
+.connectionsList li strong {
+  color: #3b82f6;
+  font-weight: 600;
+}
+
+.alternatives {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 2px solid #e2e8f0;
+}
+
+.alternatives h3 {
+  font-size: 1.5rem;
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+}
+
+.alternative {
+  margin-bottom: 1.5rem;
+}
+
+.alternative strong {
+  color: #3b82f6;
+}
+
+.altTitle {
+  font-style: italic;
+}
+
+.altDescription {
+  margin-top: 0.5rem;
+  color: #64748b;
+}
+
+.bookCover {
+  text-align: center;
+  margin: 2rem 0;
+}
+
+.bookCover img {
+  max-width: 200px;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.bookCover img:hover {
+  transform: scale(1.05);
+}
+
+.anotherButton {
+  margin-top: 2rem;
+  padding: 1rem 2rem;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+  max-width: 300px;
+}
+
+.anotherButton:hover {
+  background-color: #2563eb;
+  transform: translateY(-2px);
+}
+
+.anotherButton:active {
+  transform: translateY(0);
+}
+
+.coverLoading {
+  width: 200px;
+  height: 300px;
+  background: #f3f4f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  color: #6b7280;
+  font-size: 0.9rem;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.coverImage {
+  width: 200px;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.coverImage:hover {
+  transform: scale(1.05);
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
