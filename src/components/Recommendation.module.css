@@ -174,3 +174,156 @@
     opacity: 0.5;
   }
 }
+
+.buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.button, .shareButton {
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.2s;
+}
+
+.button {
+  background-color: #4169e1;
+  color: white;
+}
+
+.shareButton {
+  background-color: #38a169;
+  color: white;
+}
+
+.button:hover {
+  background-color: #3451b2;
+}
+
+.shareButton:hover {
+  background-color: #2f855a;
+}
+
+.shareSection {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+}
+
+.shareSection h4 {
+  margin-bottom: 1rem;
+  color: #666;
+}
+
+.shareButtons {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.shareButton {
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: white;
+  transition: opacity 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.shareButton:hover {
+  opacity: 0.9;
+}
+
+.shareCopy {
+  background-color: #38a169;
+}
+
+.shareTwitter {
+  background-color: #1DA1F2;
+}
+
+.shareFacebook {
+  background-color: #4267B2;
+}
+
+.shareLinkedIn {
+  background-color: #0077b5;
+}
+
+.shareWhatsApp {
+  background-color: #25D366;
+}
+
+@media (max-width: 600px) {
+  .shareButtons {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .shareButton {
+    justify-content: center;
+  }
+}
+
+.feedbackSection {
+  margin: 2rem 0;
+  padding: 1rem;
+  background-color: #f7fafc;
+  border-radius: 0.5rem;
+  text-align: center;
+}
+
+.feedbackSection h4 {
+  margin-bottom: 1rem;
+  color: #2d3748;
+  font-size: 1.1rem;
+}
+
+.feedbackButtons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.feedbackButton {
+  padding: 0.5rem 1.5rem;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: transform 0.1s, opacity 0.2s;
+}
+
+.feedbackButton:hover {
+  transform: scale(1.05);
+}
+
+.feedbackYes {
+  background-color: #38a169;
+  color: white;
+}
+
+.feedbackNo {
+  background-color: #e53e3e;
+  color: white;
+}
+
+.feedbackMessage {
+  margin: 2rem 0;
+  padding: 1rem;
+  background-color: #f0fff4;
+  border-radius: 0.5rem;
+  color: #2f855a;
+  text-align: center;
+  font-size: 0.95rem;
+}

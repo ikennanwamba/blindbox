@@ -6,7 +6,7 @@ import FavoritesForm from './components/FavoritesForm'
 import Recommendation from './components/Recommendation'
 import RecommendationCounter from './components/RecommendationCounter'
 import { getRecommendation } from './services/openaiService'
-import { getTotalRecommendations } from './services/supabaseClient'
+import { getTotalRecommendations, supabase } from './services/supabaseClient'
 import styles from './App.module.css'
 import LoadingAnimation from './components/LoadingAnimation'
 
@@ -26,6 +26,23 @@ function App() {
     }
     loadCount()
   }, [])
+
+  useEffect(() => {
+    // Check for URL parameters on load
+    const params = new URLSearchParams(window.location.search);
+    const fav1 = params.get('fav1');
+    const fav2 = params.get('fav2');
+    const fav3 = params.get('fav3');
+    
+    if (fav1 && fav2 && fav3) {
+      const favorites = [
+        decodeURIComponent(fav1),
+        decodeURIComponent(fav2),
+        decodeURIComponent(fav3)
+      ];
+      handleGetRecommendation(favorites);
+    }
+  }, []);
 
   const handleGetRecommendation = async (favorites, isNewRequest = false) => {
     try {
@@ -65,6 +82,24 @@ function App() {
     }
   }, [recommendation, isLoading]); // Added isLoading as a dependency
 
+  const handleFeedback = async (feedbackData) => {
+    try {
+      const { error } = await supabase
+        .from('feedback')
+        .insert([{
+          recommendation_id: feedbackData.recommendationId,
+          is_positive: feedbackData.isPositive,
+          book_title: feedbackData.title,
+          interests: feedbackData.favorites
+        }]);
+
+      if (error) throw error;
+    } catch (error) {
+      console.error('Error saving feedback:', error);
+      throw error;
+    }
+  };
+
   return (
     <div className={styles.container}>
       <header className={styles.header}>
@@ -90,6 +125,8 @@ function App() {
             <Recommendation 
               recommendation={recommendation}
               onGetAnother={handleGetAnotherRecommendation}
+              favorites={currentFavorites}
+              onFeedback={handleFeedback}
             />
           </div>
         )}

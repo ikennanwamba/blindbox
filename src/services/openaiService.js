@@ -91,7 +91,15 @@ export const getRecommendation = async (favorites, isNewRequest = false) => {
 
       if (error) console.error('Error saving to Supabase:', error);
       
-      return parsedResponse;
+      // Add an ID to the recommendation
+      const recommendation = {
+        id: Date.now().toString(), // Simple ID generation
+        title: parsedResponse.title,
+        author: parsedResponse.author,
+        connections: parsedResponse.connections
+      };
+
+      return recommendation;
     } catch (parseError) {
       console.error('Parse error:', parseError);
       return {
