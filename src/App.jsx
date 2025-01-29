@@ -5,7 +5,8 @@ import './App.css'
 import FavoritesForm from './components/FavoritesForm'
 import Recommendation from './components/Recommendation'
 import RecommendationCounter from './components/RecommendationCounter'
-import { getRecommendation } from './services/deepseekService'
+import { getRecommendation } from './services/openaiService'
+import { getTotalRecommendations } from './services/supabaseClient'
 import styles from './App.module.css'
 import LoadingAnimation from './components/LoadingAnimation'
 
@@ -14,8 +15,17 @@ function App() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState(null)
   const [currentFavorites, setCurrentFavorites] = useState(null)
-  const [recommendationCount, setRecommendationCount] = useState(15427) // Starting number
+  const [recommendationCount, setRecommendationCount] = useState(0)
   const recommendationRef = useRef(null)
+
+  // Load initial count
+  useEffect(() => {
+    const loadCount = async () => {
+      const count = await getTotalRecommendations()
+      setRecommendationCount(count)
+    }
+    loadCount()
+  }, [])
 
   const handleGetRecommendation = async (favorites, isNewRequest = false) => {
     try {
@@ -24,7 +34,12 @@ function App() {
       setCurrentFavorites(favorites)
       const result = await getRecommendation(favorites, isNewRequest)
       setRecommendation(result)
-      setRecommendationCount(prev => prev + 1)
+      
+      // Add logging
+      console.log('Getting new total count...')
+      const newCount = await getTotalRecommendations()
+      console.log('New count received:', newCount)
+      setRecommendationCount(newCount)
     } catch (err) {
       console.error('Error:', err)
       setError('Failed to get recommendation. Please try again.')
@@ -39,15 +54,16 @@ function App() {
     }
   }
 
-  // Scroll to recommendation when it appears
+  // Update the useEffect to be more specific about when to scroll
   useEffect(() => {
-    if (recommendation && recommendationRef.current) {
+    if (recommendation && !isLoading && recommendationRef.current) {
       recommendationRef.current.scrollIntoView({ 
         behavior: 'smooth',
-        block: 'start'
-      })
+        block: 'start',
+        inline: 'nearest'
+      });
     }
-  }, [recommendation])
+  }, [recommendation, isLoading]); // Added isLoading as a dependency
 
   return (
     <div className={styles.container}>
