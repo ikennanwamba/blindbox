@@ -180,7 +180,7 @@ const Recommendation = ({ recommendation, onGetAnother, favorites, onFeedback })
           <h4>Share this recommendation:</h4>
           <div className={styles.shareButtons}>
             <button onClick={handleTwitterShare} className={`${styles.shareButton} ${styles.shareTwitter}`}>
-              Twitter
+              X
             </button>
             <button onClick={handleFacebookShare} className={`${styles.shareButton} ${styles.shareFacebook}`}>
               Facebook

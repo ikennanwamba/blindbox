@@ -249,7 +249,8 @@
 }
 
 .shareTwitter {
-  background-color: #1DA1F2;
+  background-color: #000000;
+  color: #ffffff;
 }
 
 .shareFacebook {
@@ -328,6 +329,23 @@
   font-size: 0.95rem;
 }
 
+.connection {
+  margin: 1rem 0;
+  padding: 1rem;
+  background-color: white;
+  border-radius: 0.5rem;
+  border: 1px solid #eee;
+}
+
+.connection h4 {
+  color: #4169e1;
+  margin-bottom: 0.5rem;
+}
+
+.connection p {
+  color: #4169e1;
+}
+
 @media (prefers-color-scheme: dark) {
   .recommendation {
     background-color: #2a2a2a;
@@ -339,12 +357,14 @@
     border: 1px solid #444444;
   }
 
-  .connection h4 {
-    color: #ffffff;
+  .connection h4,
+  .connection p {
+    color: #93c5fd !important; /* Much lighter blue for dark mode - using !important to ensure override */
   }
 
+  /* Additional specific override for dark mode text */
   .connection p {
-    color: #cccccc;
+    color: #93c5fd !important; /* Same lighter blue, with !important to force the color */
   }
 
   .feedbackSection {
