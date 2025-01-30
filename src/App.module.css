@@ -89,4 +89,20 @@ html {
   .counter {
     color: #cccccc;
   }
+
+  h1 {
+    color: #ffffff !important; /* For BlindBox */
+  }
+
+  /* For Favorite #1, #2, #3 labels */
+  h3, 
+  label,
+  .favoriteLabel {
+    color: #ffffff !important;
+  }
+
+  /* Make placeholder text slightly dimmer for contrast */
+  input::placeholder {
+    color: #888888;
+  }
 }
