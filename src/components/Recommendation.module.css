@@ -265,6 +265,11 @@
   background-color: #25D366;
 }
 
+.shareInstagram {
+  background: linear-gradient(45deg, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D);
+  color: white;
+}
+
 @media (max-width: 600px) {
   .shareButtons {
     flex-direction: column;
@@ -342,8 +347,28 @@
   margin-bottom: 0.5rem;
 }
 
-.connection p {
-  color: #4169e1;
+.connection p,
+.connection li {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+}
+
+/* Override dark mode specifically */
+[data-theme='dark'] .connection p,
+:root[data-theme='dark'] .connection p,
+@media (prefers-color-scheme: dark) {
+  .connection p {
+    color: #000000 !important;
+    -webkit-text-fill-color: #000000 !important;
+    text-fill-color: #000000 !important;
+  }
+}
+
+/* Ensure no color inheritance */
+.connection p * {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+  text-fill-color: #000000 !important;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -357,14 +382,12 @@
     border: 1px solid #444444;
   }
 
-  .connection h4,
-  .connection p {
-    color: #93c5fd !important; /* Much lighter blue for dark mode - using !important to ensure override */
+  .connection h4 {
+    color: #60a5fa;
   }
 
-  /* Additional specific override for dark mode text */
   .connection p {
-    color: #93c5fd !important; /* Same lighter blue, with !important to force the color */
+    color: #000000 !important;
   }
 
   .feedbackSection {
@@ -377,8 +400,46 @@
 
   .feedbackMessage {
     background-color: #2a2a2a;
-    color: #4ade80; /* brighter green for better contrast */
+    color: #4ade80;
   }
+}
 
-  /* Keep button colors as they are for good contrast */
+/* Target the Why it Fits section and all its content */
+._whyitFits_cm6bb_56,
+._connectionsList_cm68b_46,
+._connectionsList_cm68b_46 li,
+._whyitFits_cm6bb_56 h3,
+._whyitFits_cm6bb_56 p,
+._whyitFits_cm6bb_56 div,
+._connectionsList_cm68b_46 li {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+}
+
+/* Target the subtitle specifically */
+.subtitle,
+._subtitle_cm68b_46 {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+/* Target "Why It Fits" heading specifically */
+._whyitFits_cm6bb_56 h3,
+h3._whyitFits_cm6bb_56,
+.whyItFits h3 {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+  font-weight: bold;
+}
+
+/* Target the specific connections list and its items */
+._connectionsList_grqwu_46,
+._connectionsList_grqwu_46 li,
+._connectionsList_cm68b_46,
+._connectionsList_cm68b_46 li,
+._whyitFits_cm6bb_56,
+._whyitFits_cm6bb_56 p,
+._whyitFits_cm6bb_56 div {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
 }

@@ -1,3 +1,19 @@
+:root {
+  --bg-color: #ffffff;
+  --text-color: #2d3748;
+  --subtitle-color: #666666;
+  --input-bg: #ffffff;
+  --input-border: #e2e8f0;
+}
+
+[data-theme='dark'] {
+  --bg-color: #1a1a1a;
+  --text-color: #ffffff;
+  --subtitle-color: #cccccc;
+  --input-bg: #333333;
+  --input-border: #444444;
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -7,6 +23,8 @@ html {
   margin: 0 auto;
   padding: 0.5rem 1.5rem 1.5rem 1.5rem;
   text-align: center;
+  background-color: var(--bg-color);
+  color: var(--text-color);
   transition: background-color 0.3s, color 0.3s;
 }
 
@@ -24,7 +42,7 @@ html {
 }
 
 .subtitle {
-  color: #666;
+  color: var(--subtitle-color);
   font-size: 1.2rem;
   font-weight: 500;
   margin-bottom: 0.25rem;
@@ -45,6 +63,77 @@ html {
 
 .counter {
   margin-bottom: 1rem;
+}
+
+.themeToggle {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  padding: 0.5rem;
+  font-size: 1.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s;
+}
+
+.themeToggle:hover {
+  background-color: var(--input-bg);
+}
+
+/* Update other styles to use CSS variables */
+h1, h2, h3, h4 {
+  color: var(--text-color);
+}
+
+input {
+  background-color: var(--input-bg);
+  color: var(--text-color);
+  border: 1px solid var(--input-border);
+}
+
+input::placeholder {
+  color: #888888;
+}
+
+button {
+  color: #ffffff;
+}
+
+.recommendation {
+  background-color: #2a2a2a;
+  border: 1px solid #444444;
+}
+
+.connection {
+  background-color: #333333;
+  border: 1px solid #444444;
+}
+
+.counter {
+  color: #cccccc;
+}
+
+h1 {
+  color: #ffffff !important; /* For BlindBox */
+}
+
+/* For Favorite #1, #2, #3 labels */
+h3, 
+label,
+.favoriteLabel {
+  color: #ffffff !important;
+}
+
+/* Make placeholder text slightly dimmer for contrast */
+input::placeholder {
+  color: #888888;
 }
 
 /* Dark mode styles */

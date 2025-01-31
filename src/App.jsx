@@ -17,6 +17,7 @@ function App() {
   const [currentFavorites, setCurrentFavorites] = useState(null)
   const [recommendationCount, setRecommendationCount] = useState(0)
   const recommendationRef = useRef(null)
+  const [theme, setTheme] = useState('light')
 
   // Load initial count
   useEffect(() => {
@@ -41,6 +42,20 @@ function App() {
         decodeURIComponent(fav3)
       ];
       handleGetRecommendation(favorites);
+    }
+  }, []);
+
+  useEffect(() => {
+    // Check if user has a saved preference
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      setTheme(savedTheme);
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    } else {
+      // Check system preference
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      setTheme(prefersDark ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
     }
   }, []);
 
@@ -100,8 +115,22 @@ function App() {
     }
   };
 
+  const toggleTheme = () => {
+    const newTheme = theme === 'light' ? 'dark' : 'light';
+    setTheme(newTheme);
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+  };
+
   return (
     <div className={styles.container}>
+      <button 
+        onClick={toggleTheme} 
+        className={styles.themeToggle}
+        aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+      >
+        {theme === 'light' ? '🌙' : '☀️'}
+      </button>
       <header className={styles.header}>
         <h1>BlindBox</h1>
         <p className={styles.subtitle}>AI-powered book recommendations</p>

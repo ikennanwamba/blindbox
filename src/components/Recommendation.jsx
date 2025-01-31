@@ -74,6 +74,15 @@ const Recommendation = ({ recommendation, onGetAnother, favorites, onFeedback })
     window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
   };
 
+  const handleInstagramShare = () => {
+    const shareText = generateShareText();
+    const shareUrl = generateShareUrl();
+    
+    navigator.clipboard.writeText(`${shareText}\n${shareUrl}`).then(() => {
+      alert('Text copied! You can now paste it in your Instagram post or story.');
+    }).catch(console.error);
+  };
+
   const handleLinkedInShare = () => {
     const url = encodeURIComponent(generateShareUrl());
     const title = encodeURIComponent('BlindBox Book Recommendation');
@@ -179,11 +188,17 @@ const Recommendation = ({ recommendation, onGetAnother, favorites, onFeedback })
         <div className={styles.shareSection}>
           <h4>Share this recommendation:</h4>
           <div className={styles.shareButtons}>
+            <button onClick={handleShare} className={`${styles.shareButton} ${styles.shareCopy}`}>
+              Copy Link
+            </button>
             <button onClick={handleTwitterShare} className={`${styles.shareButton} ${styles.shareTwitter}`}>
               X
             </button>
             <button onClick={handleFacebookShare} className={`${styles.shareButton} ${styles.shareFacebook}`}>
               Facebook
+            </button>
+            <button onClick={handleInstagramShare} className={`${styles.shareButton} ${styles.shareInstagram}`}>
+              Instagram
             </button>
             <button onClick={handleLinkedInShare} className={`${styles.shareButton} ${styles.shareLinkedIn}`}>
               LinkedIn
