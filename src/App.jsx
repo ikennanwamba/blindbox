@@ -5,19 +5,22 @@ import './App.css'
 import FavoritesForm from './components/FavoritesForm'
 import Recommendation from './components/Recommendation'
 import RecommendationCounter from './components/RecommendationCounter'
-import { getRecommendation } from './services/openaiService'
+import { getRecommendation, getMultipleRecommendations } from './services/openaiService'
 import { getTotalRecommendations, supabase } from './services/supabaseClient'
 import styles from './App.module.css'
 import LoadingAnimation from './components/LoadingAnimation'
 
 function App() {
-  const [recommendation, setRecommendation] = useState(null)
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState(null)
-  const [currentFavorites, setCurrentFavorites] = useState(null)
+  const [favorites, setFavorites] = useState([
+    { id: 1, value: '' },
+    { id: 2, value: '' },
+    { id: 3, value: '' }
+  ]);
+  const [recommendations, setRecommendations] = useState([]); // Array of recommendations
+  const [loading, setLoading] = useState(false);
   const [recommendationCount, setRecommendationCount] = useState(0)
   const recommendationRef = useRef(null)
-  const [theme, setTheme] = useState('light')
+  const scrollContainerRef = useRef(null);
 
   // Load initial count
   useEffect(() => {
@@ -45,27 +48,28 @@ function App() {
     }
   }, []);
 
-  useEffect(() => {
-    // Check if user has a saved preference
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-      setTheme(savedTheme);
-      document.documentElement.setAttribute('data-theme', savedTheme);
-    } else {
-      // Check system preference
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      setTheme(prefersDark ? 'dark' : 'light');
-      document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+  const handleInputChange = (id, value) => {
+    setFavorites(favorites.map(fav => 
+      fav.id === id ? { ...fav, value } : fav
+    ));
+  };
+
+  const generateRecommendations = async () => {
+    setLoading(true);
+    try {
+      const recs = await getMultipleRecommendations(favorites);
+      setRecommendations(recs);
+    } catch (error) {
+      console.error('Error generating recommendations:', error);
     }
-  }, []);
+    setLoading(false);
+  };
 
   const handleGetRecommendation = async (favorites, isNewRequest = false) => {
     try {
-      setIsLoading(true)
-      setError(null)
-      setCurrentFavorites(favorites)
+      setLoading(true)
       const result = await getRecommendation(favorites, isNewRequest)
-      setRecommendation(result)
+      setRecommendations(prev => [...prev, result])
       
       // Add logging
       console.log('Getting new total count...')
@@ -74,28 +78,11 @@ function App() {
       setRecommendationCount(newCount)
     } catch (err) {
       console.error('Error:', err)
-      setError('Failed to get recommendation. Please try again.')
+      throw err;
     } finally {
-      setIsLoading(false)
+      setLoading(false)
     }
   }
-
-  const handleGetAnotherRecommendation = async () => {
-    if (currentFavorites) {
-      await handleGetRecommendation(currentFavorites, true)
-    }
-  }
-
-  // Update the useEffect to be more specific about when to scroll
-  useEffect(() => {
-    if (recommendation && !isLoading && recommendationRef.current) {
-      recommendationRef.current.scrollIntoView({ 
-        behavior: 'smooth',
-        block: 'start',
-        inline: 'nearest'
-      });
-    }
-  }, [recommendation, isLoading]); // Added isLoading as a dependency
 
   const handleFeedback = async (feedbackData) => {
     try {
@@ -115,22 +102,18 @@ function App() {
     }
   };
 
-  const toggleTheme = () => {
-    const newTheme = theme === 'light' ? 'dark' : 'light';
-    setTheme(newTheme);
-    document.documentElement.setAttribute('data-theme', newTheme);
-    localStorage.setItem('theme', newTheme);
+  const scroll = (direction) => {
+    if (scrollContainerRef.current) {
+      const scrollAmount = 400; // Adjust as needed
+      scrollContainerRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth'
+      });
+    }
   };
 
   return (
     <div className={styles.container}>
-      <button 
-        onClick={toggleTheme} 
-        className={styles.themeToggle}
-        aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
-      >
-        {theme === 'light' ? '🌙' : '☀️'}
-      </button>
       <header className={styles.header}>
         <h1>BlindBox</h1>
         <p className={styles.subtitle}>AI-powered book recommendations</p>
@@ -138,25 +121,66 @@ function App() {
       </header>
 
       <main className={styles.main}>
-        <FavoritesForm 
-          onSubmit={handleGetRecommendation}
-          isLoading={isLoading}
-        />
-        
-        {error && (
-          <div className={styles.error}>
-            {error}
-          </div>
-        )}
+        <div className={styles.inputSection}>
+          {favorites.map((favorite) => (
+            <div key={favorite.id} className={styles.inputGroup}>
+              <label htmlFor={`favorite-${favorite.id}`}>
+                Favorite #{favorite.id}
+              </label>
+              <input
+                id={`favorite-${favorite.id}`}
+                type="text"
+                value={favorite.value}
+                onChange={(e) => handleInputChange(favorite.id, e.target.value)}
+                placeholder="Enter something you love..."
+              />
+            </div>
+          ))}
+        </div>
 
-        {!isLoading && recommendation && (
-          <div ref={recommendationRef}>
-            <Recommendation 
-              recommendation={recommendation}
-              onGetAnother={handleGetAnotherRecommendation}
-              favorites={currentFavorites}
-              onFeedback={handleFeedback}
-            />
+        <button 
+          onClick={generateRecommendations}
+          disabled={loading || favorites.some(f => !f.value.trim())}
+          className={styles.generateButton}
+        >
+          {loading ? 'Generating...' : 'Get Recommendations'}
+        </button>
+
+        {recommendations.length > 0 && (
+          <div style={{ position: 'relative' }}>
+            <button 
+              className={`${styles.scrollButton} ${styles.scrollLeft}`}
+              onClick={() => scroll('left')}
+            >
+              ←
+            </button>
+            
+            <div className={styles.recommendationsContainer} ref={scrollContainerRef}>
+              <div className={styles.recommendationsRow}>
+                {recommendations.map((rec, index) => (
+                  <Recommendation 
+                    key={index}
+                    recommendation={rec}
+                    onGetAnother={() => {
+                      getRecommendation(favorites).then(newRec => {
+                        setRecommendations(prev => 
+                          prev.map((r, i) => i === index ? newRec : r)
+                        );
+                      });
+                    }}
+                    favorites={favorites}
+                    onFeedback={handleFeedback}
+                  />
+                ))}
+              </div>
+            </div>
+
+            <button 
+              className={`${styles.scrollButton} ${styles.scrollRight}`}
+              onClick={() => scroll('right')}
+            >
+              →
+            </button>
           </div>
         )}
       </main>

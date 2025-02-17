@@ -11,6 +11,7 @@ const Recommendation = ({ recommendation, onGetAnother, favorites, onFeedback })
   const {
     title,
     author,
+    synopsis,
     connections
   } = recommendation;
 
@@ -141,6 +142,11 @@ const Recommendation = ({ recommendation, onGetAnother, favorites, onFeedback })
             <button onClick={onGetAnother} className={styles.anotherButton}>
               Get Another Recommendation
             </button>
+          </div>
+
+          <div className={styles.synopsisSection}>
+            <h3>Synopsis</h3>
+            <p className={styles.synopsisText}>{synopsis}</p>
           </div>
 
           <div className={styles.whyItFits}>

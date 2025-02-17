@@ -1,3 +1,21 @@
+/* Variables */
+:root {
+  --card-bg: white;
+  --text-primary: #2c3e50;
+  --text-secondary: #64748b;
+  --button-bg: #4169e1;
+  --button-text: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --card-bg: #2a2a2a;
+    --text-primary: #ffffff;
+    --text-secondary: #cccccc;
+  }
+}
+
+/* Base Layout */
 .container {
   max-width: 1000px;
   margin: 2rem auto;
@@ -5,12 +23,19 @@
 }
 
 .mainRecommendation {
-  background-color: #ffffff;
+  background-color: var(--card-bg);
   border-radius: 12px;
   padding: 2rem;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  color: var(--text-primary);
+  width: 400px; /* Fixed width for consistent sizing */
+  flex-shrink: 0; /* Prevent cards from shrinking */
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
+/* Book Title Section */
 .bookTitle {
   text-align: center;
   margin-bottom: 1.5rem;
@@ -18,8 +43,8 @@
 }
 
 .titleText {
-  font-size: 2.5rem;
-  color: #2c3e50;
+  font-size: 1.8rem;
+  color: var(--text-primary);
   font-weight: 700;
   display: block;
   line-height: 1.2;
@@ -28,116 +53,28 @@
 
 .authorText {
   display: block;
-  font-size: 1.5rem;
-  color: #64748b;
+  font-size: 1.2rem;
+  color: var(--text-secondary);
   margin-top: 0.5rem;
 }
 
-.whyItFits {
-  margin: 2rem 0;
-}
-
-.whyItFits h3 {
-  font-size: 1.5rem;
-  color: #2c3e50;
-  margin-bottom: 1.5rem;
-}
-
-.connectionsList {
-  list-style: none;
-  padding: 0;
-}
-
-.connectionsList li {
-  margin-bottom: 1.5rem;
-  font-size: 1.1rem;
-  line-height: 1.6;
-  padding-left: 2rem;
-  position: relative;
-}
-
-.connectionsList li:before {
-  content: "•";
-  position: absolute;
-  left: 0.5rem;
-  color: #3b82f6;
-  font-size: 1.5rem;
-}
-
-.connectionsList li strong {
-  color: #3b82f6;
-  font-weight: 600;
-}
-
-.alternatives {
-  margin-top: 3rem;
-  padding-top: 2rem;
-  border-top: 2px solid #e2e8f0;
-}
-
-.alternatives h3 {
-  font-size: 1.5rem;
-  color: #2c3e50;
-  margin-bottom: 1.5rem;
-}
-
-.alternative {
-  margin-bottom: 1.5rem;
-}
-
-.alternative strong {
-  color: #3b82f6;
-}
-
-.altTitle {
-  font-style: italic;
-}
-
-.altDescription {
-  margin-top: 0.5rem;
-  color: #64748b;
-}
-
+/* Book Cover */
 .bookCover {
   text-align: center;
   margin: 2rem 0;
 }
 
-.bookCover img {
-  max-width: 200px;
-  height: 300px;
+.coverImage {
+  width: 150px;
+  height: 225px;
   object-fit: cover;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease;
 }
 
-.bookCover img:hover {
+.coverImage:hover {
   transform: scale(1.05);
-}
-
-.anotherButton {
-  margin-top: 2rem;
-  padding: 1rem 2rem;
-  background-color: #3b82f6;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  width: 100%;
-  max-width: 300px;
-}
-
-.anotherButton:hover {
-  background-color: #2563eb;
-  transform: translateY(-2px);
-}
-
-.anotherButton:active {
-  transform: translateY(0);
 }
 
 .coverLoading {
@@ -153,62 +90,59 @@
   animation: pulse 1.5s ease-in-out infinite;
 }
 
-.coverImage {
-  width: 200px;
-  height: 300px;
-  object-fit: cover;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
+/* Why It Fits Section */
+.whyItFits {
+  margin: 2rem 0;
 }
 
-.coverImage:hover {
-  transform: scale(1.05);
+.whyItFits h3 {
+  font-size: 1.5rem;
+  color: #000000;
+  margin-bottom: 1.5rem;
+  font-weight: bold;
 }
 
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
+.connectionsList {
+  list-style: none;
+  padding: 0;
 }
 
-.buttons {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  margin-top: 2rem;
+.connectionsList li {
+  margin-bottom: 1.5rem;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  padding-left: 2rem;
+  position: relative;
+  color: #000000;
 }
 
-.button, .shareButton {
-  padding: 0.75rem 1.5rem;
+.connectionsList li:before {
+  content: "•";
+  position: absolute;
+  left: 0.5rem;
+  color: #3b82f6;
+  font-size: 1.5rem;
+}
+
+.connection {
+  margin: 1rem 0;
+  padding: 1rem;
+  background-color: white;
   border-radius: 0.5rem;
-  border: none;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: background-color 0.2s;
+  border: 1px solid #eee;
 }
 
-.button {
-  background-color: #4169e1;
-  color: white;
+.connection h4 {
+  color: #4169e1;
+  margin-bottom: 0.5rem;
 }
 
-.shareButton {
-  background-color: #38a169;
-  color: white;
+.connection p,
+.connection li {
+  color: #000000;
 }
 
-.button:hover {
-  background-color: #3451b2;
-}
-
-.shareButton:hover {
-  background-color: #2f855a;
-}
-
+/* Share Section */
 .shareSection {
   margin-top: 2rem;
   padding-top: 1rem;
@@ -244,43 +178,17 @@
   opacity: 0.9;
 }
 
-.shareCopy {
-  background-color: #38a169;
-}
-
-.shareTwitter {
-  background-color: #000000;
-  color: #ffffff;
-}
-
-.shareFacebook {
-  background-color: #4267B2;
-}
-
-.shareLinkedIn {
-  background-color: #0077b5;
-}
-
-.shareWhatsApp {
-  background-color: #25D366;
-}
-
+/* Share Button Variants */
+.shareCopy { background-color: #38a169; }
+.shareTwitter { background-color: #000000; }
+.shareFacebook { background-color: #4267B2; }
+.shareLinkedIn { background-color: #0077b5; }
+.shareWhatsApp { background-color: #25D366; }
 .shareInstagram {
   background: linear-gradient(45deg, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D);
-  color: white;
 }
 
-@media (max-width: 600px) {
-  .shareButtons {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  
-  .shareButton {
-    justify-content: center;
-  }
-}
-
+/* Feedback Section */
 .feedbackSection {
   margin: 2rem 0;
   padding: 1rem;
@@ -307,22 +215,15 @@
   border-radius: 0.25rem;
   cursor: pointer;
   font-size: 1rem;
-  transition: transform 0.1s, opacity 0.2s;
+  transition: transform 0.1s;
 }
 
 .feedbackButton:hover {
   transform: scale(1.05);
 }
 
-.feedbackYes {
-  background-color: #38a169;
-  color: white;
-}
-
-.feedbackNo {
-  background-color: #e53e3e;
-  color: white;
-}
+.feedbackYes { background-color: #38a169; color: white; }
+.feedbackNo { background-color: #e53e3e; color: white; }
 
 .feedbackMessage {
   margin: 2rem 0;
@@ -334,112 +235,50 @@
   font-size: 0.95rem;
 }
 
-.connection {
-  margin: 1rem 0;
+/* Animations */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Button styles */
+.getAnotherButton {
+  background-color: var(--button-bg);
+  color: var(--button-text);
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border: none;
+}
+
+.getAnotherButton:hover {
+  background-color: #3154b3;
+}
+
+/* Synopsis Section */
+.synopsisSection {
+  margin: 1.5rem 0;
   padding: 1rem;
-  background-color: white;
+  background-color: var(--card-bg);
   border-radius: 0.5rem;
-  border: 1px solid #eee;
+  border-left: 3px solid var(--button-primary);
 }
 
-.connection h4 {
-  color: #4169e1;
+.synopsisSection h3 {
+  font-size: 1.2rem;
+  color: var(--text-primary);
   margin-bottom: 0.5rem;
+  font-weight: 600;
 }
 
-.connection p,
-.connection li {
-  color: #000000 !important;
-  -webkit-text-fill-color: #000000 !important;
+.synopsisText {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  margin: 0;
 }
 
-/* Override dark mode specifically */
-[data-theme='dark'] .connection p,
-:root[data-theme='dark'] .connection p,
-@media (prefers-color-scheme: dark) {
-  .connection p {
-    color: #000000 !important;
-    -webkit-text-fill-color: #000000 !important;
-    text-fill-color: #000000 !important;
-  }
-}
-
-/* Ensure no color inheritance */
-.connection p * {
-  color: #000000 !important;
-  -webkit-text-fill-color: #000000 !important;
-  text-fill-color: #000000 !important;
-}
-
-@media (prefers-color-scheme: dark) {
-  .recommendation {
-    background-color: #2a2a2a;
-    color: #ffffff;
-  }
-
-  .connection {
-    background-color: #333333;
-    border: 1px solid #444444;
-  }
-
-  .connection h4 {
-    color: #60a5fa;
-  }
-
-  .connection p {
-    color: #000000 !important;
-  }
-
-  .feedbackSection {
-    background-color: #333333;
-  }
-
-  .feedbackSection h4 {
-    color: #ffffff;
-  }
-
-  .feedbackMessage {
-    background-color: #2a2a2a;
-    color: #4ade80;
-  }
-}
-
-/* Target the Why it Fits section and all its content */
-._whyitFits_cm6bb_56,
-._connectionsList_cm68b_46,
-._connectionsList_cm68b_46 li,
-._whyitFits_cm6bb_56 h3,
-._whyitFits_cm6bb_56 p,
-._whyitFits_cm6bb_56 div,
-._connectionsList_cm68b_46 li {
-  color: #000000 !important;
-  -webkit-text-fill-color: #000000 !important;
-}
-
-/* Target the subtitle specifically */
-.subtitle,
-._subtitle_cm68b_46 {
-  color: #ffffff !important;
-  -webkit-text-fill-color: #ffffff !important;
-}
-
-/* Target "Why It Fits" heading specifically */
-._whyitFits_cm6bb_56 h3,
-h3._whyitFits_cm6bb_56,
-.whyItFits h3 {
-  color: #000000 !important;
-  -webkit-text-fill-color: #000000 !important;
-  font-weight: bold;
-}
-
-/* Target the specific connections list and its items */
-._connectionsList_grqwu_46,
-._connectionsList_grqwu_46 li,
-._connectionsList_cm68b_46,
-._connectionsList_cm68b_46 li,
-._whyitFits_cm6bb_56,
-._whyitFits_cm6bb_56 p,
-._whyitFits_cm6bb_56 div {
-  color: #000000 !important;
-  -webkit-text-fill-color: #000000 !important;
-}
+/* Update system prompt to ensure concise synopsis */
+/* Adjust the prompt in openaiService.js:
+   "synopsis": "A concise 1-2 sentence overview of the book's core story or premise" */

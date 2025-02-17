@@ -1,122 +1,100 @@
-import { supabase } from './supabaseClient';
+import OpenAI from 'openai';
 
-const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
-console.log('OpenAI Key loaded:', !!OPENAI_API_KEY); // Will log true if key exists, false if undefined
-const API_URL = 'https://api.openai.com/v1/chat/completions';
+const openai = new OpenAI({
+  apiKey: import.meta.env.VITE_OPENAI_API_KEY,
+  dangerouslyAllowBrowser: true
+});
 
-const createPrompt = (favorites, isNewRequest = false) => {
-  const previousBooks = Array.from(previousRecommendations).join(', ');
-  
-  let prompt = `Based on these interests: ${favorites.join(', ')}, recommend a book.`;
-  
-  if (isNewRequest && previousBooks.length > 0) {
-    prompt += ` Please suggest a different book that has NOT been recommended before. Previously recommended books were: ${previousBooks}. The new recommendation should be unique and NOT include any of these titles.`;
-  }
-
-  prompt += ` Return your response in this exact JSON format, with no additional text or formatting:
-{
-  "title": "Book Title",
-  "author": "Author Name",
-  "connections": [
-    {
-      "topic": "${favorites[0]}",
-      "explanation": "Detailed explanation of how the book connects to this interest"
-    },
-    {
-      "topic": "${favorites[1]}",
-      "explanation": "Detailed explanation of how the book connects to this interest"
-    },
-    {
-      "topic": "${favorites[2]}",
-      "explanation": "Detailed explanation of how the book connects to this interest"
-    }
-  ]
-}`;
-
-  return prompt;
-};
-
-let previousRecommendations = new Set();
-
-export const getRecommendation = async (favorites, isNewRequest = false) => {
+const getRecommendation = async (favorites, previousTitles = []) => {
   try {
-    const response = await fetch(API_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${OPENAI_API_KEY}`,
-        'OpenAI-Beta': 'assistants=v1'
-      },
-      body: JSON.stringify({
-        model: "gpt-4",
-        messages: [
-          {
-            role: "user",
-            content: createPrompt(favorites, isNewRequest)
-          }
-        ],
-        temperature: isNewRequest ? 0.9 : 0.7,
-        max_tokens: 1000
-      })
+    const response = await openai.chat.completions.create({
+      model: "gpt-4-turbo-preview",
+      messages: [
+        {
+          role: "system",
+          content: "You are a book recommendation expert. Return ONLY raw JSON with no markdown formatting or backticks. Your recommendation MUST be unique and different from these previous recommendations: " + previousTitles.join(", ") + ". Format: {\"title\": \"Book Title\", \"author\": \"Author Name\", \"connections\": [{\"interest\": \"user interest\", \"explanation\": \"why it connects\"}]}"
+        },
+        {
+          role: "user",
+          content: `Recommend a unique book based on these interests: ${favorites.map(f => f.value).join(', ')}`
+        }
+      ],
+      temperature: 0.7,
     });
 
-    if (!response.ok) {
-      throw new Error('API request failed');
-    }
+    // Log the raw response
+    console.log('Raw OpenAI Response:', response.choices[0].message.content);
 
-    const data = await response.json();
-    const content = data.choices[0].message.content;
-    
+    let recommendation;
     try {
-      const cleanedContent = content.trim().replace(/```json\n?|\n?```/g, '');
-      const parsedResponse = JSON.parse(cleanedContent);
-      
-      previousRecommendations.add(parsedResponse.title);
-      
-      if (previousRecommendations.size > 5) {
-        const [firstItem] = previousRecommendations;
-        previousRecommendations.delete(firstItem);
-      }
-      
-      // Save to Supabase
-      const { error } = await supabase
-        .from('recommendations')
-        .insert({
-          title: parsedResponse.title,
-          author: parsedResponse.author,
-          interests: favorites,
-          connections: parsedResponse.connections,
-          times_recommended: 1
-        });
-
-      if (error) console.error('Error saving to Supabase:', error);
-      
-      // Add an ID to the recommendation
-      const recommendation = {
-        id: Date.now().toString(), // Simple ID generation
-        title: parsedResponse.title,
-        author: parsedResponse.author,
-        connections: parsedResponse.connections
-      };
-
-      return recommendation;
+      recommendation = JSON.parse(response.choices[0].message.content.trim());
     } catch (parseError) {
-      console.error('Parse error:', parseError);
-      return {
-        title: "Error Processing Recommendation",
-        author: "System",
-        connections: favorites.map(fav => ({
-          topic: fav,
-          explanation: "We encountered an error processing this recommendation. Please try again."
-        }))
-      };
+      console.error('Parse Error Details:', {
+        error: parseError.message,
+        content: response.choices[0].message.content,
+        position: parseError.position
+      });
+      return null;
     }
+
+    return recommendation;
   } catch (error) {
-    console.error('API error:', error);
-    throw error;
+    console.error('API Error:', error);
+    return null;
   }
 };
 
-export const clearRecommendationHistory = () => {
-  previousRecommendations.clear();
-}; 
+// Helper function to get multiple unique recommendations
+const getMultipleRecommendations = async (favorites, count = 5) => {
+  try {
+    const response = await openai.chat.completions.create({
+      model: "gpt-4-turbo-preview",
+      messages: [
+        {
+          role: "system",
+          content: `You are a book recommendation expert. Return exactly ${count} recommendations as raw JSON with NO markdown formatting, NO \`\`\` markers, and NO additional text:
+{
+  "recommendations": [
+    {
+      "title": "Book Title",
+      "author": "Author Name",
+      "connections": [
+        {
+          "interest": "user interest",
+          "explanation": "why it connects"
+        }
+      ]
+    }
+  ]
+}
+Do not wrap the response in code blocks or add any formatting.`
+        },
+        {
+          role: "user",
+          content: `Recommend ${count} unique books based on these interests: ${favorites.map(f => f.value).join(', ')}`
+        }
+      ],
+      temperature: 0.7,
+    });
+
+    let content = response.choices[0].message.content.trim();
+    
+    // Remove any markdown code block markers if present
+    content = content.replace(/^```json\s*/, '').replace(/\s*```$/, '');
+    
+    console.log('Raw OpenAI Response:', content);
+
+    const parsed = JSON.parse(content);
+    if (!parsed.recommendations || !Array.isArray(parsed.recommendations) || parsed.recommendations.length !== count) {
+      console.error('Invalid response structure:', parsed);
+      return [];
+    }
+
+    return parsed.recommendations;
+  } catch (error) {
+    console.error('API Error:', error);
+    return [];
+  }
+};
+
+export { getRecommendation, getMultipleRecommendations }; 

@@ -1,17 +1,21 @@
+/* Variables */
 :root {
   --bg-color: #ffffff;
   --text-color: #2d3748;
   --subtitle-color: #666666;
   --input-bg: #ffffff;
   --input-border: #e2e8f0;
+  --button-primary: #4169e1;
 }
 
-[data-theme='dark'] {
-  --bg-color: #1a1a1a;
-  --text-color: #ffffff;
-  --subtitle-color: #cccccc;
-  --input-bg: #333333;
-  --input-border: #444444;
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-color: #1a1a1a;
+    --text-color: #ffffff;
+    --subtitle-color: #cccccc;
+    --input-bg: #333333;
+    --input-border: #444444;
+  }
 }
 
 html {
@@ -23,9 +27,9 @@ html {
   margin: 0 auto;
   padding: 0.5rem 1.5rem 1.5rem 1.5rem;
   text-align: center;
-  background-color: var(--bg-color);
-  color: var(--text-color);
-  transition: background-color 0.3s, color 0.3s;
+  min-height: 100vh;
+  background-color: #1a1a1a;
+  color: #ffffff;
 }
 
 .header {
@@ -34,18 +38,15 @@ html {
 }
 
 .header h1 {
-  color: #2c3e50;
+  color: #ffffff;
   font-size: 2.5rem;
-  font-weight: 700;
-  margin-bottom: 0.25rem;
-  margin-top: 0;
+  margin-bottom: 0.5rem;
 }
 
 .subtitle {
-  color: var(--subtitle-color);
+  color: #ffffff;
+  margin-bottom: 2rem;
   font-size: 1.2rem;
-  font-weight: 500;
-  margin-bottom: 0.25rem;
 }
 
 .main {
@@ -93,9 +94,13 @@ h1, h2, h3, h4 {
 }
 
 input {
-  background-color: var(--input-bg);
-  color: var(--text-color);
-  border: 1px solid var(--input-border);
+  width: 100%;
+  max-width: 400px;
+  padding: 0.75rem;
+  border: 1px solid #444444;
+  border-radius: 0.5rem;
+  background-color: #333333;
+  color: #ffffff;
 }
 
 input::placeholder {
@@ -136,62 +141,80 @@ input::placeholder {
   color: #888888;
 }
 
-/* Dark mode styles */
-@media (prefers-color-scheme: dark) {
-  .container {
-    background-color: #1a1a1a;
-    color: #ffffff;
-  }
+.recommendationsContainer {
+  width: 100%;
+  overflow-x: auto;
+  padding: 1rem 0;
+  /* Smooth scrolling */
+  scroll-behavior: smooth;
+  /* Hide scrollbar but keep functionality */
+  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;  /* IE and Edge */
+}
 
-  h1, h2, h3, h4 {
-    color: #ffffff;
-  }
+.recommendationsContainer::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
 
-  .subtitle {
-    color: #cccccc;
-  }
+.recommendationsRow {
+  display: flex;
+  gap: 2rem;
+  padding: 0 1rem;
+  /* Prevent last card from being cut off */
+  padding-right: calc(50% - 150px);
+  min-width: min-content;
+}
 
-  input {
-    background-color: #333333;
-    color: #ffffff;
-    border: 1px solid #444444;
-  }
+/* Optional scroll buttons */
+.scrollButton {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  z-index: 1;
+}
 
-  input::placeholder {
-    color: #888888;
-  }
+.scrollLeft {
+  left: 1rem;
+}
 
-  button {
-    color: #ffffff;
-  }
+.scrollRight {
+  right: 1rem;
+}
 
-  .recommendation {
-    background-color: #2a2a2a;
-    border: 1px solid #444444;
-  }
+.inputGroup {
+  margin-bottom: 1rem;
+}
 
-  .connection {
-    background-color: #333333;
-    border: 1px solid #444444;
-  }
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #ffffff;
+}
 
-  .counter {
-    color: #cccccc;
-  }
+.generateButton {
+  margin-top: 1.5rem;
+  padding: 0.75rem 1.5rem;
+  background-color: #4169e1;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.2s;
+}
 
-  h1 {
-    color: #ffffff !important; /* For BlindBox */
-  }
+.generateButton:hover {
+  background-color: #3154b3;
+}
 
-  /* For Favorite #1, #2, #3 labels */
-  h3, 
-  label,
-  .favoriteLabel {
-    color: #ffffff !important;
-  }
-
-  /* Make placeholder text slightly dimmer for contrast */
-  input::placeholder {
-    color: #888888;
-  }
+.generateButton:disabled {
+  background-color: #666666;
+  cursor: not-allowed;
 }
